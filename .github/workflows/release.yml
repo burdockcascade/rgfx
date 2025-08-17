@@ -15,6 +15,7 @@ jobs:
         run: cargo test
   release-please:
     runs-on: ubuntu-latest
+    timeout-minutes: 4
     needs: test
     steps:
       - uses: googleapis/release-please-action@v4

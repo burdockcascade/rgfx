@@ -26,6 +26,8 @@ impl Vertex2D {
     }
 }
 
+#[repr(C)]
+#[derive(Copy, Clone, Debug, Pod, Zeroable)]
 pub struct Vertex3D {
     pub position: [f32; 3],
     pub normal: [f32; 3],

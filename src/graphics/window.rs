@@ -83,7 +83,7 @@ impl ApplicationHandler for Window {
                 window.request_redraw();
             }
             None => {
-                error!("No window found");
+                error!("Window not yet initialized");
             }
         }
     }

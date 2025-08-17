@@ -77,13 +77,14 @@ impl ApplicationHandler for Window {
 
     }
 
-    fn about_to_wait(&mut self, _event_loop: &ActiveEventLoop) {
+    fn about_to_wait(&mut self, event_loop: &ActiveEventLoop) {
         match self.winit_window {
             Some(ref window) => {
                 window.request_redraw();
             }
             None => {
                 error!("Window not yet initialized");
+                event_loop.exit();
             }
         }
     }

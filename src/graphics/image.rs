@@ -24,7 +24,7 @@ impl Image {
 
     pub fn single_pixel(color: Color) -> Self {
         let mut img = RgbaImage::new(1, 1);
-        img.put_pixel(0, 0, image::Rgba(color.clone().into()));
+        img.put_pixel(0, 0, image::Rgba(color.into()));
         Self {
             path: format!("single_pixel_{:?}_{:?}_{:?}_{:?}", color.r, color.g, color.b, color.a),
             image: image::DynamicImage::ImageRgba8(img)

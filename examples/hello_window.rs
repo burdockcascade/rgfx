@@ -1,6 +1,7 @@
 use rgfx::prelude::*;
 
 fn main() {
-    Window::new(800, 600, "Hello Window")
-        .run();
+    let window = Window::new(800, 600, "Hello Window");
+
+    window.run();
 }

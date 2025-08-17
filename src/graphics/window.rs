@@ -23,10 +23,10 @@ impl Window {
         }
     }
 
-    pub fn run(&mut self) {
+    pub fn run(mut self) {
         match EventLoop::new() {
             Ok(event_loop) => {
-                if let Err(e) = event_loop.run_app(self) {
+                if let Err(e) = event_loop.run_app(&mut self) {
                     error!("Failed to run app: {}", e);
                 }
             },

@@ -1,5 +1,3 @@
-use cgmath::{Vector2, Vector3};
-use winit::keyboard::KeyCode;
 use rgfx::prelude::*;
 
 #[derive(Debug)]

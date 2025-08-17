@@ -9,4 +9,6 @@ pub mod prelude {
     pub use crate::graphics::color::*;
     pub use crate::graphics::image::*;
     pub use crate::graphics::transform::*;
+    pub use winit::keyboard::KeyCode;
+    pub use cgmath::{Point2, Point3, Vector2, Vector3};
 }

@@ -81,7 +81,7 @@ impl<'a> PipelineBuilder<'a> {
             }),
             multiview: None,
             primitive: wgpu::PrimitiveState {
-                topology: PrimitiveTopology::TriangleList,
+                topology: self.primitive_topology,
                 strip_index_format: None,
                 front_face: wgpu::FrontFace::Cw,
                 cull_mode: Some(wgpu::Face::Back),

@@ -25,7 +25,11 @@ impl Window {
 
     pub fn run(&mut self) {
         match EventLoop::new() {
-            Ok(event_loop) => event_loop.run_app(self).expect("Unable to run app"),
+            Ok(event_loop) => {
+                if let Err(e) = event_loop.run_app(self) {
+                    error!("Failed to run app: {}", e);
+                }
+            },
             Err(e) => error!("Error creating event loop: {}", e)
         }
     }

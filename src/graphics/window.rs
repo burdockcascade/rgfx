@@ -12,7 +12,7 @@ pub struct Window {
 
 impl Window {
 
-    pub fn new(width : i32, height : i32, title : &str) -> Self {
+    pub fn new(width: i32, height: i32, title: &str) -> Self {
         let window_attributes = winit::window::Window::default_attributes()
             .with_title(title)
             .with_inner_size(winit::dpi::PhysicalSize::new(width, height));

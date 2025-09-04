@@ -83,3 +83,4 @@ fn main() {
     Window::new(800, 600, "Hello Window", Box::new(MyWindow::default()))
         .run();
 }
+

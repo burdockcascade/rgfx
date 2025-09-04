@@ -1,10 +1,10 @@
 use crate::graphics::color::Color;
 use crate::graphics::image::Image;
 use crate::graphics::transform::Transform;
-use crate::prelude::Canvas;
+use crate::prelude::{Canvas, DrawStyle};
 use crate::renderer::pipeline::PipelineBuilder;
 use crate::renderer::texture::Texture;
-use crate::renderer::uniform::Uniforms;
+use crate::renderer::uniform::Uniform2D;
 use crate::renderer::vertex::Vertex2D;
 use log::warn;
 use pollster::FutureExt;
@@ -15,15 +15,15 @@ use wgpu::wgc::device::DeviceDescriptor;
 use wgpu::{Adapter, AdapterInfo, BindGroup, BindGroupLayout, Buffer, Device, Instance, PresentMode, Queue, Surface};
 use winit::dpi::PhysicalSize;
 use winit::window::Window;
+use crate::renderer::mesh::Mesh;
 
 #[derive(Clone, Debug)]
 pub enum DrawCommand {
     DrawMesh2D {
-        vertices: Vec<Vertex2D>,
-        indices: Vec<u16>,
+        mesh: Mesh<Vertex2D>,
         camera_matrix: [[f32; 4]; 4],
         transform: Transform,
-        image: Option<Image>,
+        style: DrawStyle
     }
 }
 
@@ -36,6 +36,7 @@ pub struct RenderState {
     config: wgpu::SurfaceConfiguration,
     render_pipeline: wgpu::RenderPipeline,
     size: PhysicalSize<u32>,
+    uniform2d: Uniform2D,
 }
 
 impl RenderState {
@@ -103,7 +104,8 @@ impl RenderState {
             queue,
             config,
             size,
-            render_pipeline
+            render_pipeline,
+            uniform2d: Uniform2D::new(),
         }
     }
 
@@ -129,7 +131,7 @@ impl RenderState {
         })
     }
 
-    fn create_uniform_bind_group(device: &Device, uniforms: Uniforms) -> BindGroup {
+    fn create_uniform_bind_group(device: &Device, uniforms: Uniform2D) -> BindGroup {
         let uniform_bind_group_layout = RenderState::create_uniform_bind_layout(&device);
         let transform_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
             label: Some("Uniforms Buffer"),
@@ -275,23 +277,24 @@ impl RenderState {
                 timestamp_writes: None,
             });
 
-            let mut draw_uniforms = Uniforms::new();
-
             for command in draw_commands.iter() {
                 match command {
-                    DrawCommand::DrawMesh2D { vertices, indices, camera_matrix, transform, image } => {
+                    DrawCommand::DrawMesh2D { mesh, camera_matrix, transform, style } => {
+
+                        let vertices = &mesh.vertices;
+                        let indices = &mesh.indices;
 
                         render_pass.set_pipeline(&self.render_pipeline);
-                        draw_uniforms.update_camera(*camera_matrix);
-                        draw_uniforms.update_transform(transform);
-                        draw_uniforms.set_use_texture(image.is_some());
+                        self.uniform2d.update_camera(*camera_matrix);
+                        self.uniform2d.update_transform(transform);
+                        self.uniform2d.set_use_texture(style.image.is_some());
 
                         // Group 0
-                        let bind_group = Self::create_uniform_bind_group(&self.device, draw_uniforms);
+                        let bind_group = Self::create_uniform_bind_group(&self.device, self.uniform2d);
                         render_pass.set_bind_group(0, &bind_group, &[]);
 
                         // Group 1
-                        let texture = match image {
+                        let texture = match &style.image {
                             Some(img) => {
                                 Texture::from_image(&self.device, img.clone().image)
                             },

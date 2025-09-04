@@ -1,18 +1,24 @@
 use crate::renderer::vertex::Vertex2D;
 
 #[derive(Clone, Debug)]
-pub struct Mesh {
-    pub vertices: Vec<Vertex2D>,
+pub struct Mesh<V> {
+    pub vertices: Vec<V>,
     pub indices: Vec<u16>,
 }
 
-impl Mesh {
-    pub fn new(vertices: Vec<Vertex2D>, indices: Vec<u16>) -> Self {
+impl<V> Mesh<V> {
+    pub fn new(vertices: Vec<V>, indices: Vec<u16>) -> Self {
         Self { vertices, indices }
     }
 
+}
+
+pub struct MeshBuilder2D;
+
+impl MeshBuilder2D {
+
     // Creates a mesh from a triangle with the given position, size, and color.
-    pub fn from_triangle(color: [f32; 4]) -> Self {
+    pub fn from_triangle(color: [f32; 4]) -> Mesh<Vertex2D> {
 
         let x = 0.0;
         let y = 0.0;
@@ -36,10 +42,11 @@ impl Mesh {
             },
         ];
         let indices = vec![0, 1, 2]; // Single triangle
-        Self::new(vertices, indices)
+
+        Mesh::new(vertices, indices)
     }
 
-    pub fn from_rectangle(width: f32, height: f32, color: [f32; 4]) -> Self {
+    pub fn from_rectangle(width: f32, height: f32, color: [f32; 4]) -> Mesh<Vertex2D> {
         let x = 0.0;
         let y = 0.0;
         let half_width = width / 2.0;
@@ -71,10 +78,10 @@ impl Mesh {
             },
         ];
         let indices = vec![0, 1, 2, 1, 3, 2]; // Two triangles forming a rectangle
-        Self::new(vertices, indices)
+        Mesh::new(vertices, indices)
     }
 
-    pub fn from_circle(radius: f32, segments: usize, color: [f32; 4]) -> Self {
+    pub fn from_circle(radius: f32, segments: usize, color: [f32; 4]) -> Mesh<Vertex2D> {
         let mut vertices = Vec::with_capacity(segments + 1);
         let mut indices = Vec::with_capacity(segments * 3);
 
@@ -104,7 +111,7 @@ impl Mesh {
             indices.push(i as u16);
         }
 
-        Self::new(vertices, indices)
+        Mesh::new(vertices, indices)
     }
 
 }

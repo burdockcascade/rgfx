@@ -2,7 +2,7 @@ use crate::graphics::camera::CameraMatrix;
 use crate::graphics::color::Color;
 use crate::graphics::image::Image;
 use crate::graphics::transform::Transform;
-use crate::renderer::mesh::Mesh;
+use crate::renderer::mesh::{Mesh, MeshBuilder2D};
 use crate::renderer::state::DrawCommand;
 use log::trace;
 
@@ -48,28 +48,30 @@ impl Canvas {
         trace!("Starting new frame");
     }
 
-    pub fn draw_triangle(&mut self, camera: &mut dyn CameraMatrix, transform: Transform, size: f32, style: DrawStyle) {
-        let mesh = Mesh::from_triangle(style.color.into());
-        self.draw_mesh(mesh, camera, transform, style.image.clone());
+    pub fn draw_triangle(&mut self, camera: &mut dyn CameraMatrix, transform: Transform, style: DrawStyle) {
+        self.draw_commands.push(DrawCommand::DrawMesh2D {
+            mesh: MeshBuilder2D::from_triangle(style.color.into()),
+            camera_matrix: camera.to_view_projection_matrix().into(),
+            transform,
+            style
+        });
     }
 
     pub fn draw_rectangle(&mut self, camera: &mut dyn CameraMatrix, transform: Transform, width: f32, height: f32, style: DrawStyle) {
-        let mesh = Mesh::from_rectangle(width, height, style.color.into());
-        self.draw_mesh(mesh, camera, transform, style.image.clone());
+        self.draw_commands.push(DrawCommand::DrawMesh2D {
+            mesh: MeshBuilder2D::from_rectangle(width, height, style.color.into()),
+            camera_matrix: camera.to_view_projection_matrix().into(),
+            transform,
+            style,
+        });
     }
 
     pub fn draw_circle(&mut self, camera: &mut dyn CameraMatrix, transform: Transform, radius: f32, style: DrawStyle) {
-        let mesh = Mesh::from_circle(radius, 64, style.color.into());
-        self.draw_mesh(mesh, camera, transform, style.image.clone());
-    }
-
-    pub fn draw_mesh(&mut self, mesh: Mesh, camera: &mut dyn CameraMatrix, transform: Transform, image: Option<Image>) {
         self.draw_commands.push(DrawCommand::DrawMesh2D {
-            vertices: mesh.vertices,
-            indices: mesh.indices,
+            mesh: MeshBuilder2D::from_circle(radius, 64, style.color.into()),
             camera_matrix: camera.to_view_projection_matrix().into(),
             transform,
-            image,
+            style
         });
     }
 

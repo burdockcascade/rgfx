@@ -4,14 +4,14 @@ use cgmath::{Matrix4, SquareMatrix};
 
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Pod, Zeroable)]
-pub struct Uniforms {
+pub struct Uniform2D {
     pub(crate) camera: [[f32; 4]; 4],
     pub(crate) transform: [[f32; 4]; 4],
     use_texture: u32,
     _padding: [[f32; 4]; 4], // Padding to ensure alignment
 }
 
-impl Uniforms {
+impl Uniform2D {
     pub fn new() -> Self {
         Self {
             camera: Matrix4::identity().into(),

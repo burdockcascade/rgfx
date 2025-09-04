@@ -68,9 +68,6 @@ impl AppHandler for MyWindow {
         // Update the square rotation based on the elapsed time
         self.square_rotation += delta * 50.0; // Rotate at 50 degrees per second
 
-        // rotate the rectangle in reverse direction
-        //self.rect_rotation -= delta * 10.0; // Rotate at 30 degrees per second
-
     }
 
     fn on_draw(&mut self, canvas: &mut Canvas) {
@@ -79,6 +76,14 @@ impl AppHandler for MyWindow {
 
         let camera = &mut self.camera;
 
+        // Draw a triangle
+        let transform = Transform::new()
+            .with_scale(0.75, 0.75, 0.75)
+            .with_position(0.0, 0.0, 0.0);
+        let draw_style = DrawStyle::default()
+            .with_color(Color::BLUE);
+        canvas.draw_triangle(camera, transform, draw_style);
+
         // Draw a rectangle
         let transform = Transform::new()
             .with_position_vector(self.rect_pos)
@@ -86,13 +91,6 @@ impl AppHandler for MyWindow {
         let draw_style = DrawStyle::default()
             .with_color(Color::RED);
         canvas.draw_rectangle(camera, transform, 1.0, 1.0,  draw_style);
-
-        // Draw a triangle
-        let transform = Transform::new()
-            .with_position(0.0, 0.0, 0.0);
-        let draw_style = DrawStyle::default()
-            .with_color(Color::BLUE);
-        canvas.draw_triangle(camera, transform, 0.0, draw_style);
 
         // Draw a circle
         let transform = Transform::new()

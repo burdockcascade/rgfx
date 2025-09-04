@@ -6,24 +6,15 @@ pub struct Mesh<V> {
     pub indices: Vec<u16>,
 }
 
-impl<V> Mesh<V> {
-    pub fn new(vertices: Vec<V>, indices: Vec<u16>) -> Self {
-        Self { vertices, indices }
-    }
-
-}
-
 pub struct MeshBuilder2D;
 
 impl MeshBuilder2D {
 
     // Creates a mesh from a triangle with the given position, size, and color.
     pub fn from_triangle(color: [f32; 4]) -> Mesh<Vertex2D> {
-
         let x = 0.0;
         let y = 0.0;
-        let size = 1.0; // Default size for the triangle
-
+        let size = 1.0;
         let vertices = vec![
             Vertex2D {
                 position: [x, y + size],
@@ -43,7 +34,10 @@ impl MeshBuilder2D {
         ];
         let indices = vec![0, 1, 2]; // Single triangle
 
-        Mesh::new(vertices, indices)
+        Mesh {
+            vertices,
+            indices,
+        }
     }
 
     pub fn from_rectangle(width: f32, height: f32, color: [f32; 4]) -> Mesh<Vertex2D> {
@@ -78,7 +72,10 @@ impl MeshBuilder2D {
             },
         ];
         let indices = vec![0, 1, 2, 1, 3, 2]; // Two triangles forming a rectangle
-        Mesh::new(vertices, indices)
+        Mesh {
+            vertices,
+            indices,
+        }
     }
 
     pub fn from_circle(radius: f32, segments: usize, color: [f32; 4]) -> Mesh<Vertex2D> {
@@ -111,7 +108,10 @@ impl MeshBuilder2D {
             indices.push(i as u16);
         }
 
-        Mesh::new(vertices, indices)
+        Mesh {
+            vertices,
+            indices,
+        }
     }
 
 }

@@ -48,27 +48,25 @@ impl Canvas {
         trace!("Starting new frame");
     }
 
+    /// Draws a triangle at the given transform with the given style.
     pub fn draw_triangle(&mut self, camera: &mut dyn CameraMatrix, transform: Transform, style: DrawStyle) {
-        self.draw_commands.push(DrawCommand::DrawMesh2D {
-            mesh: MeshBuilder2D::from_triangle(style.color.into()),
-            camera_matrix: camera.to_view_projection_matrix().into(),
-            transform,
-            style
-        });
+        self.draw_mesh(camera, transform, MeshBuilder2D::from_triangle(style.color.into()), style);
     }
 
+    /// Draws a rectangle at the given transform with the given style.
     pub fn draw_rectangle(&mut self, camera: &mut dyn CameraMatrix, transform: Transform, width: f32, height: f32, style: DrawStyle) {
-        self.draw_commands.push(DrawCommand::DrawMesh2D {
-            mesh: MeshBuilder2D::from_rectangle(width, height, style.color.into()),
-            camera_matrix: camera.to_view_projection_matrix().into(),
-            transform,
-            style,
-        });
+        self.draw_mesh(camera, transform, MeshBuilder2D::from_rectangle(width, height, style.color.into()), style);
     }
 
+    /// Draws a circle at the given transform with the given style.
     pub fn draw_circle(&mut self, camera: &mut dyn CameraMatrix, transform: Transform, radius: f32, style: DrawStyle) {
+        self.draw_mesh(camera, transform, MeshBuilder2D::from_circle(radius, 32, style.color.into()), style);
+    }
+
+    /// Draws a mesh at the given transform with the given style.
+    pub fn draw_mesh(&mut self, camera: &mut dyn CameraMatrix, transform: Transform, mesh: Mesh<crate::renderer::vertex::Vertex2D>, style: DrawStyle) {
         self.draw_commands.push(DrawCommand::DrawMesh2D {
-            mesh: MeshBuilder2D::from_circle(radius, 64, style.color.into()),
+            mesh,
             camera_matrix: camera.to_view_projection_matrix().into(),
             transform,
             style

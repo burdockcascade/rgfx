@@ -11,7 +11,6 @@ use pollster::FutureExt;
 use std::cmp::max;
 use std::sync::Arc;
 use wgpu::util::DeviceExt;
-use wgpu::wgc::device::DeviceDescriptor;
 use wgpu::{Adapter, AdapterInfo, BindGroup, BindGroupLayout, Buffer, Device, Instance, PresentMode, Queue, Surface};
 use winit::dpi::PhysicalSize;
 use winit::window::Window;
@@ -46,7 +45,10 @@ impl RenderState {
         let size = window.inner_size();
 
         // Create a new instance
-        let instance = Instance::new(&wgpu::InstanceDescriptor::default());
+        let instance = Instance::new(&wgpu::InstanceDescriptor {
+            backends: wgpu::Backends::all(),
+            ..Default::default()
+        });
 
         // Request an adapter from the instance
         let adapter = instance
@@ -275,6 +277,7 @@ impl RenderState {
                 depth_stencil_attachment: None,
                 occlusion_query_set: None,
                 timestamp_writes: None,
+                multiview_mask: None,
             });
 
             for command in draw_commands.iter() {

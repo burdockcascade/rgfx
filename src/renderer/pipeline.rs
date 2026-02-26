@@ -54,7 +54,7 @@ impl<'a> PipelineBuilder<'a> {
         let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
             label: self.label.map(|l| format!("{} Layout", l)).as_deref(),
             bind_group_layouts, // Use the provided bind group layouts
-            push_constant_ranges: &[], // No push constants for now
+            immediate_size: 0,
         });
 
         Ok(device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
@@ -79,7 +79,7 @@ impl<'a> PipelineBuilder<'a> {
                     write_mask: wgpu::ColorWrites::ALL,
                 })],
             }),
-            multiview: None,
+            multiview_mask: None,
             primitive: wgpu::PrimitiveState {
                 topology: self.primitive_topology,
                 strip_index_format: None,

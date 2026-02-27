@@ -100,7 +100,7 @@ impl ApplicationHandler for Window {
 
         let display = RenderState::new(window.clone());
 
-        println!("Adaptor: {:?}", display.get_adaptor_info());
+        //println!("Adaptor: {:?}", display.get_adaptor_info());
 
         self.display = Some(display);
         self.winit_window = Some(window.clone());
